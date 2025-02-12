@@ -1,0 +1,27 @@
+services:
+  redis: 
+    image: redis:alpine
+    container_name: redis-local
+    ports:
+      - "6379:6379"
+  
+  posgres:
+      image: postgres:latest
+      container_name: postgres-local
+      ports:
+        - "5432:5432"
+      environment:
+        POSTGRES_USER: username
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: dbname
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+  
+  # add migration here
+  # add kafka here
+  # add dnamo here
+  # add mongo here
+  # add nats here
+
+volumes:
+  postgres_data:
