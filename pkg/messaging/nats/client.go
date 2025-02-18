@@ -1,4 +1,4 @@
-package mynats
+package nats
 
 import (
 	"github.com/nats-io/nats.go"
@@ -14,14 +14,6 @@ func NewNatsClient(url string) (*NatsClient, error) {
         return nil, err
     }
     return &NatsClient{Conn: nc}, nil
-}
-
-func (c *NatsClient) Publish(subject string, message []byte) error {
-    return c.Conn.Publish(subject, message)
-}
-
-func (c *NatsClient) Subscribe(subject string, handler nats.MsgHandler) (*nats.Subscription, error) {
-    return c.Conn.Subscribe(subject, handler)
 }
 
 func (c *NatsClient) Close() {
