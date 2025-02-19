@@ -12,11 +12,11 @@ import (
 )
 
 var (
-	URL = natsio.DefaultURL 
-	NUM_SUBS = 5
-	NUM_MSGS = 1_000
+	URL         = natsio.DefaultURL
+	NUM_SUBS    = 5
+	NUM_MSGS    = 1_000
 	QUEUE_GROUP = "test"
-	SUBJECT = "orders"
+	SUBJECT     = "orders"
 )
 
 func main() {
@@ -33,16 +33,16 @@ func main() {
 		go subscribe(nc, SUBJECT, i, &wg)
 	}
 
-	<-time.After(1*time.Second)
+	<-time.After(1 * time.Second)
 
-	for i := 1; i <= NUM_MSGS; i++{
+	for i := 1; i <= NUM_MSGS; i++ {
 		<-time.After(5 * time.Millisecond)
 		nc.Publish(SUBJECT, []byte(fmt.Sprintf("msg-%d", i)))
 	}
 
 	wg.Wait()
 
-	exit := make(chan os.Signal, 1) 
+	exit := make(chan os.Signal, 1)
 	signal.Notify(exit, os.Interrupt, syscall.SIGTERM)
 
 	<-exit
@@ -105,6 +105,6 @@ func subscribe(nc *natsio.Conn, subject string, id int, wg *sync.WaitGroup) {
 	// }
 	// defer sub.Unsubscribe()
 	// <-time.After(10 * time.Second)
-	
+
 	fmt.Printf("sub-%d received %d msgs\n", id, readMsgs)
 }
