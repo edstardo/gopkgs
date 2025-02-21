@@ -145,7 +145,7 @@ func (s *Subscriber) QueueSubscribeSync(ctx context.Context, wg *sync.WaitGroup)
 	}
 }
 
-func (s *Subscriber) SubscribeChan(ctx context.Context, wg *sync.WaitGroup, msgChan chan *natsio.Msg) error {
+func (s *Subscriber) SubscribeWithChan(ctx context.Context, wg *sync.WaitGroup, msgChan chan *natsio.Msg) error {
 	defer wg.Done()
 
 	if s.cfg.Subject == "" {
@@ -153,6 +153,33 @@ func (s *Subscriber) SubscribeChan(ctx context.Context, wg *sync.WaitGroup, msgC
 	}
 
 	sub, err := s.nc.ChanSubscribe(s.cfg.Subject, msgChan)
+	if err != nil {
+		return err
+	}
+	defer sub.Unsubscribe()
+
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Printf("%s terminated\n", s.ID)
+			return nil
+		case msg := <-msgChan:
+			s.handler(msg)
+		}
+	}
+}
+
+func (s *Subscriber) QueueSubscribeWithChan(ctx context.Context, wg *sync.WaitGroup, msgChan chan *natsio.Msg) error {
+	defer wg.Done()
+
+	if s.cfg.Subject == "" {
+		return fmt.Errorf("invalid subscriber subject")
+	}
+	if s.cfg.QueueGroup == "" {
+		return fmt.Errorf("invalid queue subscriber subject")
+	}
+
+	sub, err := s.nc.ChanQueueSubscribe(s.cfg.Subject, s.cfg.QueueGroup, msgChan)
 	if err != nil {
 		return err
 	}
