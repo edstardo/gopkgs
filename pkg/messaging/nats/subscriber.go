@@ -196,6 +196,33 @@ func (s *Subscriber) QueueSubscribeWithChan(ctx context.Context, wg *sync.WaitGr
 	}
 }
 
+func (s *Subscriber) QueueSubscribeSyncWithChan(ctx context.Context, wg *sync.WaitGroup, msgChan chan *natsio.Msg) error {
+	defer wg.Done()
+
+	if s.cfg.Subject == "" {
+		return fmt.Errorf("invalid subscriber subject")
+	}
+	if s.cfg.QueueGroup == "" {
+		return fmt.Errorf("invalid queue subscriber subject")
+	}
+
+	sub, err := s.nc.QueueSubscribeSyncWithChan(s.cfg.Subject, s.cfg.QueueGroup, msgChan)
+	if err != nil {
+		return err
+	}
+	defer sub.Unsubscribe()
+
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Printf("%s terminated\n", s.ID)
+			return nil
+		case msg := <-msgChan:
+			s.handler(msg)
+		}
+	}
+}
+
 func (s *Subscriber) Close() {
 	s.nc.Close()
 }
