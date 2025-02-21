@@ -82,6 +82,69 @@ func (s *Subscriber) QueueSubscribe(ctx context.Context, wg *sync.WaitGroup) err
 	}
 }
 
+func (s *Subscriber) SubscribeSync(ctx context.Context, wg *sync.WaitGroup) error {
+	defer wg.Done()
+
+	if s.cfg.Subject == "" {
+		return fmt.Errorf("invalid queue subscriber subject")
+	}
+
+	sub, err := s.nc.SubscribeSync(s.cfg.Subject)
+	if err != nil {
+		return err
+	}
+	defer sub.Unsubscribe()
+
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Printf("%s terminated\n", s.ID)
+			return nil
+		default:
+			msg, err := sub.NextMsg(5 * time.Second)
+			if err != nil {
+				fmt.Printf("error: %s\n", err.Error())
+				return nil
+			} else {
+				s.handler(msg)
+			}
+		}
+	}
+}
+
+func (s *Subscriber) QueueSubscribeSync(ctx context.Context, wg *sync.WaitGroup) error {
+	defer wg.Done()
+
+	if s.cfg.Subject == "" {
+		return fmt.Errorf("invalid queue subscriber subject")
+	}
+	if s.cfg.QueueGroup == "" {
+		return fmt.Errorf("invalid queue subscriber subject")
+	}
+
+	sub, err := s.nc.QueueSubscribeSync(s.cfg.Subject, s.cfg.QueueGroup)
+	if err != nil {
+		return err
+	}
+	defer sub.Unsubscribe()
+
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Printf("%s terminated\n", s.ID)
+			return nil
+		default:
+			msg, err := sub.NextMsg(5 * time.Second)
+			if err != nil {
+				fmt.Printf("error: %s\n", err.Error())
+				return nil
+			} else {
+				s.handler(msg)
+			}
+		}
+	}
+}
+
 func (s *Subscriber) Close() {
 	s.nc.Close()
 }
