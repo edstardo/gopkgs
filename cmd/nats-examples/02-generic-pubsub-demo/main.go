@@ -48,6 +48,9 @@ func main() {
 	wg.Add(1)
 	go syncQueueSubscriberDemo(ctx, &wg)
 
+	wg.Add(1)
+	go subscriberChanDemo(ctx, &wg)
+
 	wg.Wait()
 }
 
@@ -65,7 +68,7 @@ func subscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	url := natsio.DefaultURL
 	numSubs := 5
 	numMsgs := 100_000
-	subject := "orders.ph"
+	subject := "orders.sub.demo"
 
 	nc, err := natsio.Connect(url)
 	if err != nil {
@@ -116,8 +119,8 @@ func queueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	url := natsio.DefaultURL
 	numSubs := 5
 	numMsgs := 100_000
-	subject := "orders.sg.queue"
-	queue := "orders.sg"
+	subject := "orders.queue.sub.demo"
+	queue := "orders.queue.sub.demo"
 
 	nc, err := natsio.Connect(url)
 	if err != nil {
@@ -173,7 +176,7 @@ func syncSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	url := natsio.DefaultURL
 	numSubs := 5
 	numMsgs := 1_000
-	subject := "orders.us"
+	subject := "orders.sync.sub.demo"
 
 	nc, err := natsio.Connect(url)
 	if err != nil {
@@ -227,8 +230,8 @@ func syncQueueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	url := natsio.DefaultURL
 	numSubs := 5
 	numMsgs := 1_000
-	subject := "orders.eu"
-	queue := "orders.eu.queue"
+	subject := "orders.sync.queue.sub.demo"
+	queue := "orders.sync.queue.sub.demo"
 
 	nc, err := natsio.Connect(url)
 	if err != nil {
@@ -279,4 +282,57 @@ func syncQueueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	}
 
 	fmt.Printf("%d total read messages\n", total)
+}
+
+func subscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
+	url := natsio.DefaultURL
+	numSubs := 10
+	numMsgs := 1_000
+	subject := "orders.chan.sub.demo"
+
+	nc, err := natsio.Connect(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer nc.Close()
+	defer mainWG.Done()
+
+	var wg sync.WaitGroup
+
+	var subs []*OrdersSubscriber
+	go func() {
+		for i := 1; i <= numSubs; i++ {
+			oSub := &OrdersSubscriber{}
+			oSub.Subscriber = nats.NewSubscriber(nc, &nats.SubscriberConfig{
+				Subject: subject,
+			}, oSub.OrdersHandler)
+
+			subs = append(subs, oSub)
+			wg.Add(1)
+			go oSub.Subscriber.SubscribeChan(ctx, &wg, make(chan *natsio.Msg))
+		}
+	}()
+
+	// add delay to make sure all consumers are already
+	// setup and ready to receive messages
+	<-time.After(2 * time.Second)
+
+	ordersPublisher := nats.NewPublisher(nc, subject)
+	for i := 1; i <= numMsgs; i++ {
+		if err := ctx.Err(); err != nil {
+			break
+		}
+		// publish msg delay
+		<-time.After(10 * time.Millisecond)
+		if err := ordersPublisher.Publish([]byte(fmt.Sprintf("msg-%d", i))); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	wg.Wait()
+
+	fmt.Println("\n============================= subscriberChanDemo demo result")
+	for _, s := range subs {
+		fmt.Printf("%s read %d messages\n", s.Subscriber.ID, s.ReadMsgs)
+	}
 }

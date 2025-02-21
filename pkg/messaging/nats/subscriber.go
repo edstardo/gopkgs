@@ -101,7 +101,7 @@ func (s *Subscriber) SubscribeSync(ctx context.Context, wg *sync.WaitGroup) erro
 			fmt.Printf("%s terminated\n", s.ID)
 			return nil
 		default:
-			msg, err := sub.NextMsg(5 * time.Second)
+			msg, err := sub.NextMsg(2 * time.Second)
 			if err != nil {
 				fmt.Printf("error: %s\n", err.Error())
 				return nil
@@ -134,13 +134,37 @@ func (s *Subscriber) QueueSubscribeSync(ctx context.Context, wg *sync.WaitGroup)
 			fmt.Printf("%s terminated\n", s.ID)
 			return nil
 		default:
-			msg, err := sub.NextMsg(5 * time.Second)
+			msg, err := sub.NextMsg(2 * time.Second)
 			if err != nil {
 				fmt.Printf("error: %s\n", err.Error())
 				return nil
 			} else {
 				s.handler(msg)
 			}
+		}
+	}
+}
+
+func (s *Subscriber) SubscribeChan(ctx context.Context, wg *sync.WaitGroup, msgChan chan *natsio.Msg) error {
+	defer wg.Done()
+
+	if s.cfg.Subject == "" {
+		return fmt.Errorf("invalid subscriber subject")
+	}
+
+	sub, err := s.nc.ChanSubscribe(s.cfg.Subject, msgChan)
+	if err != nil {
+		return err
+	}
+	defer sub.Unsubscribe()
+
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Printf("%s terminated\n", s.ID)
+			return nil
+		case msg := <-msgChan:
+			s.handler(msg)
 		}
 	}
 }
