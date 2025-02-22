@@ -71,7 +71,7 @@ func (s *OrdersSubscriber) OrdersHandler(msg *natsio.Msg) {
 }
 
 func subscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := natsio.DefaultURL
+	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
 	numSubs := 5
 	numMsgs := 10_000
 	subject := "orders.sub.demo"
@@ -122,7 +122,7 @@ func subscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func queueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := natsio.DefaultURL
+	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
 	numSubs := 5
 	numMsgs := 10_000
 	subject := "orders.queue.sub.demo"
@@ -179,7 +179,7 @@ func queueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func syncSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := natsio.DefaultURL
+	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
 	numSubs := 5
 	numMsgs := 1_000
 	subject := "orders.sync.sub.demo"
@@ -233,7 +233,7 @@ func syncSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func syncQueueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := natsio.DefaultURL
+	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
 	numSubs := 5
 	numMsgs := 1_000
 	subject := "orders.sync.queue.sub.demo"
@@ -291,7 +291,7 @@ func syncQueueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func subscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := natsio.DefaultURL
+	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
 	numSubs := 10
 	numMsgs := 1_000
 	subject := "orders.chan.sub.demo"
@@ -344,7 +344,7 @@ func subscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func queueSubscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := natsio.DefaultURL
+	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
 	numSubs := 5
 	numMsgs := 1_000
 	subject := "orders.chan.queue.sub.demo"
@@ -402,7 +402,7 @@ func queueSubscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func queueSubscriberSyncWithChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := natsio.DefaultURL
+	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
 	numSubs := 5
 	numMsgs := 1_000
 	subject := "orders.chan.queue.sync.sub.demo"
