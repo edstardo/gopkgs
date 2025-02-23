@@ -1,0 +1,5 @@
+
+## Core NATS Examples
+
+Here's a list of mini projects using pure Core NATS
+- [Simple Publisher Subcriber](./01-simple-pubsub-demo/README.md)
