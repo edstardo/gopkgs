@@ -6,15 +6,27 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"sync"
 	"syscall"
 	"time"
 
 	"github.com/edstardo/gopkgs/pkg/messaging/nats"
+	"github.com/joho/godotenv"
 	natsio "github.com/nats-io/nats.go"
 )
 
 func main() {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		panic(err)
+	}
+	environmentPath := filepath.Join(dir, ".env")
+
+	if err := godotenv.Load(environmentPath); err != nil {
+		panic(err)
+	}
+
 	exit := make(chan os.Signal, 1)
 	signal.Notify(exit, os.Interrupt, syscall.SIGTERM)
 
@@ -71,12 +83,12 @@ func (s *OrdersSubscriber) OrdersHandler(msg *natsio.Msg) {
 }
 
 func subscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
+	natsServer := os.Getenv("NATS_CLUSTER")
 	numSubs := 5
 	numMsgs := 10_000
 	subject := "orders.sub.demo"
 
-	nc, err := natsio.Connect(url)
+	nc, err := natsio.Connect(natsServer)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -122,13 +134,13 @@ func subscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func queueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
+	natsServer := os.Getenv("NATS_CLUSTER")
 	numSubs := 5
 	numMsgs := 10_000
 	subject := "orders.queue.sub.demo"
 	queue := "orders.queue.sub.demo"
 
-	nc, err := natsio.Connect(url)
+	nc, err := natsio.Connect(natsServer)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -179,12 +191,12 @@ func queueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func syncSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
+	natsServer := os.Getenv("NATS_CLUSTER")
 	numSubs := 5
 	numMsgs := 1_000
 	subject := "orders.sync.sub.demo"
 
-	nc, err := natsio.Connect(url)
+	nc, err := natsio.Connect(natsServer)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -233,13 +245,13 @@ func syncSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func syncQueueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
+	natsServer := os.Getenv("NATS_CLUSTER")
 	numSubs := 5
 	numMsgs := 1_000
 	subject := "orders.sync.queue.sub.demo"
 	queue := "orders.sync.queue.sub.demo"
 
-	nc, err := natsio.Connect(url)
+	nc, err := natsio.Connect(natsServer)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -291,12 +303,12 @@ func syncQueueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func subscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
+	natsServer := os.Getenv("NATS_CLUSTER")
 	numSubs := 10
 	numMsgs := 1_000
 	subject := "orders.chan.sub.demo"
 
-	nc, err := natsio.Connect(url)
+	nc, err := natsio.Connect(natsServer)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -344,13 +356,13 @@ func subscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func queueSubscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
+	natsServer := os.Getenv("NATS_CLUSTER")
 	numSubs := 5
 	numMsgs := 1_000
 	subject := "orders.chan.queue.sub.demo"
 	queue := "orders.chan.queue.sub.demo"
 
-	nc, err := natsio.Connect(url)
+	nc, err := natsio.Connect(natsServer)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -402,13 +414,13 @@ func queueSubscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 }
 
 func queueSubscriberSyncWithChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
-	url := "nats://localhost:4222,nats://localhost:4223,nats://localhost:4224"
+	natsServer := os.Getenv("NATS_CLUSTER")
 	numSubs := 5
 	numMsgs := 1_000
 	subject := "orders.chan.queue.sync.sub.demo"
 	queue := "orders.chan.queue.sync.sub.demo"
 
-	nc, err := natsio.Connect(url)
+	nc, err := natsio.Connect(natsServer)
 	if err != nil {
 		log.Fatal(err)
 	}
