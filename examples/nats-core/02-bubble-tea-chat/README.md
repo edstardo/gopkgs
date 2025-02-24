@@ -3,7 +3,7 @@
 This is a simple terminal-based chat application using Core Nats and [Bubble Tea](https://github.com/charmbracelet/bubbletea)
 
 ## NATS Cluster Setup
-For local NATS cluster setup see [Guide to Setup a Local NATS Cluster](../../../../cmd/setup/local-nats-cluster/README.md). <br />
+For local NATS cluster setup see [Guide to Setup a Local NATS Cluster](../../../local/nats-cluster/README.md). <br />
 ## Dependencies
 Download dependencies
 ```

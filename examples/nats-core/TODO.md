@@ -13,11 +13,7 @@
 ## TODOS
 ### Core NATS
 - ✅ Simple PubSub Demo
-- Chat Application (Easy)
-    - Description: A simple chat system where users subscribe to chat rooms (NATS subjects) and send messages.
-    - Concepts Used: Multi-client communication, simple message broadcasting.
-    - Example: A CLI-based chat where users join channels (nats.Subscribe("chat.general")).
-
+- ✅ Chat Application
 - Distributed Logger (Easy-Medium)
     - Description: A logging system where multiple services send logs to a central NATS subject. A subscriber writes logs to a file or stdout.
     - Concepts Used: Structured logging, message filtering.

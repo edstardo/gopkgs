@@ -3,5 +3,5 @@ This is a directory of reusable packages and libs implemented in Go for most com
 
 ## Messaging
 ### NATS
-- [Guide to Setup a Local NATS Cluster](./cmd/setup/local-nats-cluster/README.md)
-- [Core NATS Examples](./cmd/examples/nats-core/README.md)
+- [Guide to Setup a Local NATS Cluster](./local/nats-cluster/README.md)
+- [Core NATS Examples](./examples/nats-core/README.md)
