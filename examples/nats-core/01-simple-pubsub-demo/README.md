@@ -12,8 +12,6 @@ $ go mod tidy
 ```
 
 ## Run
-Steps to run this demo:
-- setup a local nats cluster, see [Setup](#setup) 
 - cd into the demo folder
 - build
 ```
