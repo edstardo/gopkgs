@@ -15,5 +15,12 @@ CD into this project directory and run the following command in multiple separat
 ```
 $ go run ./ ./
 ```
-Every instances of the application connects to a local nats cluster, subscribes and publishes to subject "chat.bubble" creating a mesh of clients forming a chat room.
+Every instance of the application connects to a local nats cluster, subscribes and publishes to subject "chat.bubble" creating a mesh of clients forming a chat room.
 
+## Test client instances
+Make that a few instances of the application are running then on a separate terminal run the following command:
+```
+$nats pub  "chat.bubble" '{"sender_id":"admin","message":"message-{{Count}}"}'  --count=-1 --sleep=500ms --no-context
+```
+This command publishes a message to the "chat.bubble" subject every 500ms indefinitely until closed. <br />
+All active instances should receive message with sender "admin".

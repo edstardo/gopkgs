@@ -1,14 +1,19 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"sync"
+	"syscall"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/edstardo/gopkgs/pkg/messaging/nats"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
+	natsio "github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -23,29 +28,41 @@ func main() {
 	}
 
 	natsServer := os.Getenv("NATS_CLUSTER")
+	natsSubject := os.Getenv("NATS_SUBJECT")
 
-	nc, err := nats.NewNatsClient(natsServer)
+	exit := make(chan os.Signal, 1)
+	signal.Notify(exit, os.Interrupt, syscall.SIGTERM)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		<-exit
+		cancel()
+	}()
+
+	nc, err := natsio.Connect(natsServer)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	engine := chatEngine{
 		id:      uuid.NewString(),
-		nc:      nc,
-		subject: "chat.bubble",
 		msgChan: make(chan chatMessage),
 	}
 
-	_, err = engine.nc.Subscribe(engine.subject, engine.handleChatMessage)
-	if err != nil {
-		log.Fatal(err)
-	}
+	engine.subscriber = nats.NewSubscriber(nc, &nats.SubscriberConfig{
+		Subject: natsSubject,
+	}, engine.handleChatMessage)
 
-	chatModel := newChatModel(engine)
+	engine.publisher = nats.NewPublisher(nc, natsSubject)
 
-	p := tea.NewProgram(chatModel)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go engine.subscriber.Subscribe(ctx, &wg)
 
+	p := tea.NewProgram(newChatModel(engine))
 	if _, err := p.Run(); err != nil {
 		log.Fatal(err)
 	}
+
+	wg.Wait()
 }

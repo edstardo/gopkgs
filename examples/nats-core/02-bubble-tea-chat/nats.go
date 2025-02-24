@@ -8,10 +8,10 @@ import (
 )
 
 type chatEngine struct {
-	id      string
-	nc      *nats.NatsClient
-	subject string
-	msgChan chan chatMessage
+	id         string
+	subscriber *nats.Subscriber
+	publisher  *nats.Publisher
+	msgChan    chan chatMessage
 }
 
 func (c *chatEngine) handleChatMessage(msg *natsio.Msg) {
@@ -33,7 +33,7 @@ func (c *chatEngine) sendChatMessage(message string) {
 		panic(err)
 	}
 
-	if err := c.nc.Publish(c.subject, data); err != nil {
+	if err := c.publisher.Publish(data); err != nil {
 		panic(err)
 	}
 }

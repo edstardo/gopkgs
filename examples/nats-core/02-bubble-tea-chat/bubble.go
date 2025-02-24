@@ -113,11 +113,12 @@ func (m chatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		senderName := "You"
 
 		if chat.SenderID != m.engine.id {
-			senderName = m.engine.id
+			senderName = chat.SenderID
 		}
 
 		m.messages = append(m.messages, m.senderStyle.Render(fmt.Sprintf("%s: ", senderName))+chat.Message)
 		m.viewport.SetContent(lipgloss.NewStyle().Width(m.viewport.Width).Render(strings.Join(m.messages, "\n")))
+		m.viewport.GotoBottom()
 
 		// Continue listening for more chat messages
 		return m, waitForNatsMessage(m.engine.msgChan)
