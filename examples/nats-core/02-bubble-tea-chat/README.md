@@ -21,6 +21,10 @@ $ go run ./ ./
 ```
 Every instance of the application connects to a local nats cluster, subscribes and publishes to subject "chat.bubble" creating a mesh of clients forming a chat room.
 
+### Example
+Here's how it looks like starting 4 application instances side by side. Each instance chats "one", "two", "three" and "four" respectively. <br />
+<img src="./media/demo.gif" width="100%"/>
+
 ### Test client instances
 -----
 Make that a few instances of the application are running then on a separate terminal run the following command:
