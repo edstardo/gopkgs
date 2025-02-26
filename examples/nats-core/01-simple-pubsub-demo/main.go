@@ -92,7 +92,7 @@ func subscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer nc.Close()
+	defer nc.Drain()
 	defer mainWG.Done()
 
 	var wg sync.WaitGroup
@@ -144,7 +144,7 @@ func queueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer nc.Close()
+	defer nc.Drain()
 	defer mainWG.Done()
 
 	var wg sync.WaitGroup
@@ -200,7 +200,7 @@ func syncSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer nc.Close()
+	defer nc.Drain()
 	defer mainWG.Done()
 
 	var wg sync.WaitGroup
@@ -255,7 +255,7 @@ func syncQueueSubscriberDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer nc.Close()
+	defer nc.Drain()
 	defer mainWG.Done()
 
 	var wg sync.WaitGroup
@@ -312,7 +312,7 @@ func subscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer nc.Close()
+	defer nc.Drain()
 	defer mainWG.Done()
 
 	var wg sync.WaitGroup
@@ -366,7 +366,7 @@ func queueSubscriberChanDemo(ctx context.Context, mainWG *sync.WaitGroup) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer nc.Close()
+	defer nc.Drain()
 	defer mainWG.Done()
 
 	var wg sync.WaitGroup
@@ -424,7 +424,7 @@ func queueSubscriberSyncWithChanDemo(ctx context.Context, mainWG *sync.WaitGroup
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer nc.Close()
+	defer nc.Drain()
 	defer mainWG.Done()
 
 	var wg sync.WaitGroup

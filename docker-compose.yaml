@@ -16,12 +16,6 @@ services:
         POSTGRES_DB: dbname
       volumes:
         - postgres_data:/var/lib/postgresql/data
-  
-  # add migration here
-  # add kafka here
-  # add dnamo here
-  # add mongo here
-  # add nats here
 
 volumes:
   postgres_data:
