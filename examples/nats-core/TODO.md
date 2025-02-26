@@ -14,6 +14,7 @@
 ### Core NATS
 - ✅ Simple PubSub Demo
 - ✅ Chat Application
+    - improve: use encoder instead of manually marshaling json
 - Distributed Logger (Easy-Medium)
     - Description: A logging system where multiple services send logs to a central NATS subject. A subscriber writes logs to a file or stdout.
     - Concepts Used: Structured logging, message filtering.
