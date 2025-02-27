@@ -1,6 +1,6 @@
 
 ## Scatter Gather With Load Balancing Using NATS Request-Reply
-This demos a simple scatter application with load balancing and request-reply. <br />
+This demos a simple scatter gather application with load balancing and request-reply. <br />
 
 Check its [Documentation](https://docs.nats.io/nats-concepts/core-nats/reqreply) and [Semantics](https://docs.nats.io/using-nats/developer/sending/request_reply). <br />
 
