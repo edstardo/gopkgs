@@ -14,7 +14,10 @@
 ### Core NATS
 - ✅ Simple PubSub Demo
 - ✅ Chat Application
-    - improve: use encoder instead of manually marshaling json
+- ✅ Simple Request-Reply Demo
+- ✅ Scatter Gather with Load Balancing
+- NATS Micro
+    - refer to [Synadia's video](https://www.youtube.com/watch?v=AiUazlrtgyU&t=14s&ab_channel=Synadia)
 - Distributed Logger (Easy-Medium)
     - Description: A logging system where multiple services send logs to a central NATS subject. A subscriber writes logs to a file or stdout.
     - Concepts Used: Structured logging, message filtering.

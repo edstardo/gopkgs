@@ -1,6 +1,7 @@
 
 ## NATS Request-Reply Simple Demo
-This demos a simple application using NATS request-reply. <br />
+This demos a simple application using NATS Request-Reply. <br />
+Check its [Documentation](https://docs.nats.io/nats-concepts/core-nats/reqreply) and [Semantics](https://docs.nats.io/using-nats/developer/sending/request_reply). <br />
 
 
 ### NATS Cluster Setup
@@ -27,4 +28,6 @@ To terminate the program, just hit CTRL+C. Next you'll set the Stats for each su
 ```
 subscriber[1] closed: 1000000 reveived = 100.00 percent
 ```
-The Request-Reply mechanism ensures that all messages are published and replied to by all subscribers.
+The Request-Reply mechanism ensures that all messages are published and replied to by all subscribers. <bt />
+
+This also demonstrates NATS ability to allow multiple responders. A requester utilizes the first reponse it receives and NATS effeciently discards the others.
