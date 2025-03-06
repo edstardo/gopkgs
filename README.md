@@ -9,9 +9,13 @@ This is a directory of reusable packages and libs implemented in Go for most com
     - [Bubble Tea Chat](./examples/nats-core/02-bubble-tea-chat/README.md)
     - [Simple Request-Reply](./examples/nats-core//03-request-reply/README.md)
     - [Scatter Gather with Load Balancing](./examples/nats-core/04-scatter-gather/README.md)
-- NATS Jetstream
+- [NATS JetStream Examples](./examples/nats-jetstream/README.md)
+    - [Exactly Once](./examples/nats-jetstream/01-exactly-once/README.md)
 - NATS Micro
 
 
 ### Kafka
 - [Setup a Local Kafka Cluster](./local/kafka-cluster/README.md)
+
+## Auth
+## JWT

@@ -51,7 +51,7 @@
     - Concepts Used: Dynamic workload distribution, custom load balancing.
     - Example: A requests.api queue where backend workers dynamically scale and pick requests.
 
-### NATS Jetstresm demo todos:
+### NATS JetStream demo todos:
 - Persistent Event Logger (Easy)
     - Description: A system where services log events (errors, warnings, info) to a JetStream stream, ensuring they are stored and replayable.
     - Concepts Used: Streams, durable message storage, basic consumer subscription.
